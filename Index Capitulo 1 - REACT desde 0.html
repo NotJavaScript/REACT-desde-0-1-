@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capítulo 1 - REACT desde 0</title>
+</head>
+<style>
+
+    h1 {
+        font-size: 40px;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    }
+
+    picture {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        width: 100px;
+        font-size: 20px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    picture.is-small {
+        width: 50px;
+        font-size: 15px;
+    }
+
+    picture.is-large {
+        width: 200px;
+    }
+
+    img {
+        box-shadow: 0 0 15px #999;
+        border-radius: 50%;
+        width: 100%;
+    }
+
+    img.disabled {
+        opacity: 0.3;
+    }
+
+    i {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid #ccc;
+        border-radius: 50%;
+        min-height: 50px;
+        display: block;
+        width: 100%;
+    }
+
+    #contador {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        font-size: 24px;
+    }
+
+    #contador button {
+        font-weight: bold;
+        font-family: 'Courier New', Courier, monospace;
+        margin-right: 10px;
+    }
+
+    #Inc {
+        background-color: rgb(35, 211, 35);
+    }
+
+    #Dec {
+        background-color: rgb(255, 64, 64);
+    }
+
+    hr {
+        border: 2px solid black;
+    }
+
+</style>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>         <!-- Librerias de React para la prueba del proyecto -->
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>                       <!--Libreria para usar JSX de forma rápida -->
+<body>
+    <h1> Capítulo 1 - REACT desde 0 </h1>
+    <hr>
+    <div id="app"></div>
+    <!-- Con el text/babel podrá detectar las etiquetas y el código de JavaScript más moderno para que funcione en navegadores más antiguos. Haciendo que sea compatible en cualquier navegador. -->
+<script type="text/babel"> 
+    const $app = document.getElementById("app");
+    const useState = React.useState
+    // const r = React.createElement
+    const Avatar = ({ id, name = "Trabajadora", size }) => { // Le hemos indicado que el nombre como predeterminado se ponga "Trabajadora".
+        const [enabled, setEnabled] = useState(true) 
+
+        // if (!id) return <img src="https://randomuser.me/api/portraits/lego/9.jpg"/>;
+
+        const src = `https://randomuser.me/api/portraits/women/${id}.jpg`;
+
+        let pictureClassName = ''
+        if (size === "small") { pictureClassName = 'is-small' } 
+        else if (size === "large") { pictureClassName = 'is-large' }
+
+        const imgClassName = enabled ? '' : 'disabled'
+        // Estas lineas de código son trabajo de JSX, parecen html pero no lo son.
+        return ( 
+            <picture className={pictureClassName}>
+                <h1>Usuarios</h1>
+                {id ? (
+                        <img 
+                            onClick={() => setEnabled(!enabled)}
+                            className={imgClassName}
+                            // onClick={event => { event.target.classList.toggle("disabled"); }} 
+                            src={src}/>
+                    ) : ( 
+                    <i>Sin imagen</i>
+                )}
+                <strong>{enabled ? name : "Desactivada"}</strong>
+            </picture>
+        );
+
+        // return r('img', {src}); // Para verlo de una forma mucho más clara y transparente podemos usar la página de Babel.js en el apartado de Try it out.
+        // https://babeljs.io/repl#?config_lz=N4IgZglgNgpgdgQwLYxALhAJxgBygOgCsBnADxABoQdtiYAXY9AbWZHgDdLR6FMBzBkwwATGGAQBXKIwoACOAHt6ciDDkBGDfKUq1AfSSKARpo2UQRkdJjCJUOlWOT-kUrfT1MkmAF8AuhRs2AgAxvTcWJJw9BAo6CBS9IpICLGhIAFBIMS8ggC0AEyRYqGKmGnlxABqMJjEEIpwCYUADIUAzPlaFjgQODBQEHAwAAqYijiKxAhQCQAWYQDWmf6BOYqSmKEwACoAngMJVjaZQA&lineWrap=true&version=7.29.1
+    };
+
+    // Si tuviesemos Props en nuestra constante de avatar utilizaríamos esto para ponerle los valores que queramos de manera predeterminada.
+    // Avatar.defaultProps = {
+    //     name: 'Trabajadora'
+    // }
+
+    function Contador() {
+        const [contadorValue, actualizarContador] = useState(10); // Utilizamos el useState para que los componentes puedan mantener un estado interno. Este estado o información puede cambiar con el tiempo.
+        // -----------------------------------------
+        // let contadorState = useState(10); <- Valor predeterminado asignado.
+        // let contadorValue = contadorState[0]; <- Valor actual del estado.
+        // let actualizarContador = contadorState[1]; <- Valor actualizado del estado.
+        // -----------------------------------------
+        // Es curioso porque funciona mediante un Array con dos estados, el 0 para indicar el valor actual y el 1 para indicar el valor cambiado o nuevo.
+
+        return (
+            <div id="contador">
+                <h1>Contador</h1>
+                <span>{contadorValue}</span>
+                <br/>
+                <button id="Inc" onClick={() => {actualizarContador(contadorValue + 1)}}>Incrementar +</button>
+                <button id="Dec" onClick={() => {actualizarContador(contadorValue - 1)}}>Decrementar -</button>
+            </div>
+        );
+    }
+
+    ReactDOM.render(
+            // Esto al igual que antes es trabajo de JSX, sigue siendo JavaScript pero hecho de otra forma.
+
+            // PRUEBAS AVATARES SIN JSX
+            // -----------------------------------------
+            // r('div', null, [ r(Avatar, { id: 1 }), r(Avatar, { id: 2 })]), $app
+
+            // PRUEBAS AVATARES NÚMERO 1
+            // -----------------------------------------
+            // <Avatar id={11} name='Ada' size="small"/>
+            // <Avatar id={2} name='Dan'/>
+            // <Avatar id={12} name='Ada' size="large"/>
+
+            // PRUEBAS AVATARES NÚMERO 2
+            // -----------------------------------------
+            // <Avatar name="Susana"/>
+            // <Avatar id={13} size="large"/>
+
+        <div> 
+            <Avatar id={11} name='Ada' size="small"/>
+            <Contador/>
+        </div>,
+        $app
+    );
+    
+    // Código hecho en JavaScript puro para la creación de los avatares interactivos.
+    // ------------------------------------------------------------------------------
+    // const Avatar = params => {
+    //     const src = `https://randomuser.me/api/portraits/women/${params.id}.jpg`;
+
+    //     return `<picture>
+    //         <img src = "${src}"/>
+    //         <em> ${params.name}</em>
+    //         </picture>
+    //         `;
+    // };
+
+    // $app.innerHTML += Avatar({ id: 1, name: "Daniela" });
+    // $app.innerHTML += Avatar({ id: 2, name: "Jimena "});
+
+    // $app.querySelectorAll('img').forEach(img => {
+    //     img.addEventListener('click', () => {
+    //         img.classList.toggle('disabled')
+    //     });
+    // });
+
+</script>
+</body>
+</html>
